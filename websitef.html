@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MARKOVA: COMFORT GAY — Unified</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Global Styles and Background */
+body {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  background:
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvXQy1z3mzSsGvoLg7I8MU14zWB1c7LrObdA&s') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  overflow-x: hidden;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+/* Page container */
+.page { display:none; opacity:0; transition: opacity 0.6s ease-in-out; }
+.page.active { display:block; opacity:1; }
+
+/* Links */
+nav { text-align:center; margin:20px 0; display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
+nav a { padding:10px 20px; background:#ff0044; color:white; text-decoration:none; border-radius:10px; font-weight:bold; box-shadow:0 0 10px #ff77aa; transition:0.3s; }
+nav a:hover { background:#ff77aa; color:black; }
+
+/* Fade helper class */
+.fade-out { opacity:0 !important; transition: opacity 0.6s ease-in-out; }
+
+/* Header and Banner */
+header { text-align: center; padding: 60px 20px 40px 20px; }
+.header-banner {
+  display: inline-block;
+  padding: 20px 40px;
+  background: rgba(20,0,0,0.7);
+  border: 2px solid rgba(255,0,68,0.8);
+  border-radius: 15px;
+  box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa;
+  backdrop-filter: blur(2px);
+  animation: bannerGlow 2.5s infinite alternate;
+}
+@keyframes bannerGlow { 
+  0% { box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; } 
+  50% { box-shadow: 0 0 35px #ff0044, 0 0 70px #ff77aa; } 
+  100% { box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; } 
+}
+header h1 { font-size: 80px; letter-spacing: 4px; margin: 0; background: linear-gradient(45deg, #ff0044, #ff77aa, #ff0044); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 10px #ff4444, 0 0 20px #ff77aa; }
+header h2 { margin-top: 10px; font-size: 28px; letter-spacing: 2px; color: #ffcccc; text-shadow: 0 0 10px #ff5555, 0 0 20px #ff2222; }
+
+/* Home page banner and sections */
+.home-banner img { width:90%; max-width:700px; border-radius:15px; box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; margin-bottom:30px; }
+.section { max-width:800px; margin:20px auto; background: rgba(20,0,0,0.7); padding:20px; border-radius:15px; }
+.section h2 { color:#ff77aa; margin-top:0; }
+.section a { color:#ff77aa; text-decoration:underline; }
+
+/* Grid and slot cards */
+.grid { display: grid; gap: 20px; width: 90%; margin: 20px auto; }
+.grid.row-4 { grid-template-columns: repeat(4, 1fr); }
+.grid.row-3 { grid-template-columns: repeat(3, 1fr); justify-content: center; }
+
+.slot { perspective: 800px; cursor: pointer; }
+.slot-inner { position: relative; width: 100%; height: 180px; transition: transform 0.6s ease; transform-style: preserve-3d; border-radius: 15px; }
+.slot:hover .slot-inner { transform: rotateY(180deg); }
+.slot-front, .slot-back {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+  border-radius: 15px; color: white; display: flex; justify-content: center; align-items: center; text-align: center;
+}
+.slot-front { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)); font-family: 'Bebas Neue', sans-serif; font-size: 20px; transition: transform 0.3s, box-shadow 0.3s; }
+.slot:hover .slot-front { transform: rotateX(3deg) rotateY(3deg); box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; }
+.slot-back { background: rgba(20,0,0,0.85); transform: rotateY(180deg); flex-direction: column; overflow-y: auto; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding: 10px; }
+.slot-back::-webkit-scrollbar { width: 8px; }
+.slot-back::-webkit-scrollbar-track { background: transparent; }
+.slot-back::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+.slot-back::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+.slot-back { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+.slot-back img, .slot-back video { width: 100%; border-radius: 10px; margin: 5px 0; }
+
+/* STAR RATING */
+.star-rating { display: flex; gap: 6px; justify-content: center; margin-bottom: 8px; font-size: 18px; }
+.star-rating .star { color: #ff77aa; text-shadow: 0 0 10px #ff0044; transition: transform .2s ease; }
+.slot-back:hover .star-rating .star { transform: scale(1.2); }
+
+/* Floating glow animation */
+@keyframes floatGlow { 0% { transform: translateY(0px); box-shadow: 0 0 15px rgba(255,0,68,0.4); } 50% { transform: translateY(-6px); box-shadow: 0 0 30px rgba(255,0,68,0.6); } 100% { transform: translateY(0px); box-shadow: 0 0 15px rgba(255,0,68,0.4); } }
+
+/* Modal */
+.modal { position: fixed; top: 0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; opacity:0; pointer-events:none; transition: opacity 0.5s ease; backdrop-filter: blur(6px); z-index:1000; }
+.modal.show { opacity:1; pointer-events:auto; }
+.modal-content { background: rgba(15,0,0,0.95); padding:25px; border-radius:15px; width:90%; max-width:900px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; gap:15px; transform: scale(0.85); opacity:0; transition: transform 0.45s ease, opacity 0.45s ease; }
+.modal.show .modal-content { transform: scale(1); opacity:1; }
+.modal-close { position:absolute; top:15px; right:15px; font-size:26px; font-weight:bold; color:white; cursor:pointer; }
+.modal-close:hover { color:#ff5555; }
+#modal-review { overflow-y:auto; max-height:400px; padding-right:10px; line-height:1.5; color:#eee; font-size:16px; scroll-behavior:smooth; -webkit-overflow-scrolling: touch; }
+#modal-review::-webkit-scrollbar { width: 8px; }
+#modal-review::-webkit-scrollbar-track { background: transparent; }
+#modal-review::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius:10px; }
+#modal-review::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+#modal-review { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+
+.citation { text-align:center; font-size:14px; color:#999; margin:40px 0 20px 0; font-style:italic; }
+
+/* ---------- HOVER EFFECTS FOR MEMBERS PAGE ---------- */
+.member-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.member-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #ff0044, 0 0 50px #ff77aa;
+}
+
+/* ---------- HOVER EFFECTS FOR REFERENCES PAGE ---------- */
+.reference-block {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.reference-block:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px #ff0044, 0 0 50px #ff77aa;
+}
+</style>
+</head>
+<body>
+
+
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#" class="nav-link" data-target="homePage">Home</a>
+  <a href="#" class="nav-link" data-target="reviewsPage">Movie Reviews</a>
+  <a href="#" class="nav-link" data-target="membersPage">Members</a>
+  <a href="#" class="nav-link" data-target="referencesPage">References</a>
+
+</nav>
+
+<!-- HOME PAGE -->
+<div id="homePage" class="page active">
+  <!-- Your home page content here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Home — MARKOVA: COMFORT GAY</title>
+<style>
+/* Basic Page Styles */
+body {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  background:
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    url('banner.jfif') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+body.loaded { opacity: 1; }
+
+header { padding: 60px 20px 40px 20px; }
+header h1 { font-size: 60px; margin:0; color:#ff77aa; text-shadow:0 0 10px #ff0044; }
+header p { font-size:20px; max-width:700px; margin:20px auto; }
+.banner img { width:100%; max-width:800px; border-radius:15px; box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; margin:-30px; margin-bottom:30px; }
+
+nav { margin-bottom:50px; }
+nav a {
+  display:inline-block; margin:10px; padding:15px 25px;
+  background:#ff0044; color:white; text-decoration:none;
+  border-radius:10px; transition:0.3s;
+}
+nav a:hover { background:#ff77aa; color:black; }
+
+.section { max-width:800px; margin:-30px auto; background: rgba(20,0,0,0.7); padding:20px; border-radius:15px; }
+.section h2 { color:#ff77aa; margin-top:0; }
+.section a { color:#ff77aa; text-decoration:underline; }
+
+/* Fade-out helper class for smooth navigation */
+.fade-out { opacity: 0 !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="banner">
+    <img src="banner.jfif" alt="Group Banner">
+  </div>
+  <h1>MARKOVA: COMFORT GAY</h1>
+  <p>Welcome to our interactive project on the film "Markova: Comfort Gay". Explore movie reviews, meet our team, and check references.</p>
+</header>
+
+
+<div class="section">
+  <h2>About the Film</h2>
+  <p><strong>Title:</strong> Markova: Comfort Gay</p>
+  <p><strong>Year:</strong> 2000</p>
+  <p><strong>Director:</strong> Gil Portes </p>
+  <p><strong>Synopsis:</strong> Based on the life of Walterina Markova, the film portrays his survival as a male sex slave during WWII and Japanese occupation.</p>
+  <p><strong>Genre:</strong> Drama, Historical</p>
+  <p><strong>Background:</strong> A poignant look at marginalized communities and historical events in the Philippines.</p>
+  <p><strong>Watch Legally:</strong> <a href="https://youtu.be/y_05ZosRCGA" target="_blank">Click here to watch</a></p>
+</div>
+
+<script>
+// Wait for page to fully load before fading in
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
+});
+
+// Smooth navigation
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault(); // Stop immediate navigation
+    const href = link.getAttribute('href');
+    document.body.classList.remove('loaded');
+    document.body.classList.add('fade-out');
+
+    setTimeout(() => {
+      window.location.href = href;
+    }, 600); // Match CSS transition duration
+  });
+});
+</script>
+
+</body>
+</html>
+
+</div>
+
+<!-- REVIEWS PAGE -->
+<div id="reviewsPage" class="page">
+  <!-- Your reviews page content here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MARKOVA: COMFORT GAY — Interactive Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Body and fade-in/out */
+body {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  background:
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    url('https://m.media-amazon.com/images/M/MV5BODJhMjQyOTUtNWE0NS00YjM2LWEwMDEtN2ZkMjI1OTNmNGZmXkEyXkFqcGc@._V1_.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  overflow-x: hidden;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+body.loaded { opacity: 1; }
+body.fade-out { opacity: 0 !important; }
+
+/* Header */
+header { text-align: center; padding: 60px 20px 40px 20px; }
+.header-banner {
+  display: inline-block;
+  padding: 20px 40px;
+  background: rgba(20,0,0,0.7);
+  border: 2px solid rgba(255,0,68,0.8);
+  border-radius: 15px;
+  box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa;
+  backdrop-filter: blur(2px);
+  animation: bannerGlow 2.5s infinite alternate;
+}
+@keyframes bannerGlow { 
+  0% { box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; } 
+  50% { box-shadow: 0 0 35px #ff0044, 0 0 70px #ff77aa; } 
+  100% { box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; } 
+}
+header h1 { font-size: 80px; letter-spacing: 4px; margin: 0; background: linear-gradient(45deg, #ff0044, #ff77aa, #ff0044); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 10px #ff4444, 0 0 20px #ff77aa; }
+header h2 { margin-top: 10px; font-size: 28px; letter-spacing: 2px; color: #ffcccc; text-shadow: 0 0 10px #ff5555, 0 0 20px #ff2222; }
+
+/* Navigation */
+nav { text-align:center; margin:60px 0; display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
+nav a {
+  padding:10px 20px; background:#ff0044; color:white; text-decoration:none;
+  border-radius:10px; font-weight:bold; box-shadow:0 0 10px #ff77aa; transition: 0.3s;
+}
+nav a:hover { background:#ff77aa; color:black; }
+
+/* Grid and slot cards */
+.grid { display: grid; gap: 20px; width: 90%; margin: 20px auto; }
+.grid.row-4 { grid-template-columns: repeat(4, 1fr); }
+.grid.row-3 { grid-template-columns: repeat(3, 1fr); justify-content: center; }
+
+.slot { perspective: 800px; cursor: pointer; }
+.slot-inner { position: relative; width: 100%; height: 180px; transition: transform 0.6s ease; transform-style: preserve-3d; border-radius: 15px; }
+.slot:hover .slot-inner { transform: rotateY(180deg); }
+.slot-front, .slot-back {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+  border-radius: 15px; color: white; display: flex; justify-content: center; align-items: center; text-align: center;
+}
+.slot-front {
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p78098_v_v8_ac.jpg') no-repeat center center;
+  background-size: cover; font-family: 'Bebas Neue', sans-serif; font-size: 20px; transition: transform 0.3s, box-shadow 0.3s;
+}
+.slot:hover .slot-front { transform: rotateX(3deg) rotateY(3deg); box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; }
+.slot-back { background: rgba(20,0,0,0.85); transform: rotateY(180deg); flex-direction: column; overflow-y: auto; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding: 10px; }
+.slot-back::-webkit-scrollbar { width: 8px; }
+.slot-back::-webkit-scrollbar-track { background: transparent; }
+.slot-back::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+.slot-back::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+.slot-back { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+.slot-back img, .slot-back video { width: 100%; border-radius: 10px; margin: 5px 0; }
+
+/* STAR RATING */
+.star-rating { display: flex; gap: 6px; justify-content: center; margin-bottom: 8px; font-size: 18px; }
+.star-rating .star { color: #ff77aa; text-shadow: 0 0 10px #ff0044; transition: transform .2s ease; }
+.slot-back:hover .star-rating .star { transform: scale(1.2); }
+
+/* Floating glow animation */
+@keyframes floatGlow { 0% { transform: translateY(0px); box-shadow: 0 0 15px rgba(255,0,68,0.4); } 50% { transform: translateY(-6px); box-shadow: 0 0 30px rgba(255,0,68,0.6); } 100% { transform: translateY(0px); box-shadow: 0 0 15px rgba(255,0,68,0.4); } }
+
+/* Modal */
+.modal { position: fixed; top: 0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; opacity:0; pointer-events:none; transition: opacity 0.5s ease; backdrop-filter: blur(6px); z-index:1000; }
+.modal.show { opacity:1; pointer-events:auto; }
+.modal-content { background: rgba(15,0,0,0.95); padding:25px; border-radius:15px; width:90%; max-width:900px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; gap:15px; transform: scale(0.85); opacity:0; transition: transform 0.45s ease, opacity 0.45s ease; }
+.modal.show .modal-content { transform: scale(1); opacity:1; }
+.modal-close { position:absolute; top:15px; right:15px; font-size:26px; font-weight:bold; color:white; cursor:pointer; }
+.modal-close:hover { color:#ff5555; }
+#modal-review { overflow-y:auto; max-height:400px; padding-right:10px; line-height:1.5; color:#eee; font-size:16px; scroll-behavior:smooth; -webkit-overflow-scrolling: touch; }
+#modal-review::-webkit-scrollbar { width: 8px; }
+#modal-review::-webkit-scrollbar-track { background: transparent; }
+#modal-review::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius:10px; }
+#modal-review::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+#modal-review { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-banner">
+    <h1>MARKOVA: COMFORT GAY</h1>
+    <h2>GROUP 2 MOVIE REVIEW</h2>
+  </div>
+</header>
+
+
+<!-- Slots Grids -->
+<div class="grid row-4">
+  <div class="slot" data-title="Chito V. Castro's Review" data-stars="5" data-clip= "full.mp4" data-review="In this scene 0:00 –1:45. The opening of this movie. Markova body becomes both witness and archive, carried through streets that have absorbed trauma. We hear whispers of home and enlistment, but the image stays still, inviting viewers to lean in rather than look away. The camera lingers on small gestures a hand brushing rain from a cheek, a quiet breath that fogs a window so that pain feels intimate rather than abstract. The restraint frames the film’s ethical stance bearing witness requires care from spectator to participant. One of the film most striking sequences occurs around 42:10 – 44:00, when the young Markova, hiding in a cramped, dimly lit room, applies makeup as the sound of chaos filters in from outside. This clip is a turning point that encapsulates the central tensions of Markova’s identity. The scene begins with close-up shots of his trembling hands holding cosmetics, juxtaposed with the muffled echo of soldiers shouting in the streets. As Markova steadies himself in front of a cracked mirror, the soft glow of candlelight illuminates his face, creating a fragile sense of sanctuary. Yet the flicker of the flame hints at instability an artistic metaphor for a childhood overshadowed by war. 
+
+The actor portraying young Markova brings a remarkable vulnerability to this moment. His expressions shift subtly from fear to determination as he gazes into the mirror, conveying the inner resolve of someone learning to navigate a world that punishes difference. The silence within the room contrasts sharply with the noise outside, heightening the emotional weight of the scene. It is as though Markova constructs a small pocket of peace, however temporary, through his art. the middle of this movie, occurring around 58:00–01:00:00, captures the turning point in young Markova transformation from a frightened youth into someone who begins to understand the price and necessity of resilience. In this clip, Markova and several other captured individuals are forced to perform chores for the Japanese soldiers. The camera lingers on Markova face as he tries to maintain composure while hiding his fear. When a soldier mocks him and forces him to dance, the humiliation is palpable  yet Markova eyes reveal an inner fire. This moment expresses one of the movie central themes performance as oppression, but also performance as endurance. The way the scene is shot tight close ups contrasted with wide frames of the oppressive military surroundings emphasizes how small and vulnerable he is, yet how powerful his will to survive remains. This mid point clip anchors the narrative, showing how Markova internalizes trauma, transforms it, and continues moving forward despite the cruelty imposed upon him.
+
+In contrast, the ending of this movie around 1:56:30–1 :58:30 offers a quiet but emotionally charged closure. Here, the elderly Markova, having recounted his life story, reflects on the years of suffering, loneliness, and resilience. There is no melodramatic outburst just a simple, reflective monologue delivered with profound sincerity. The camera captures him in stillness, emphasizing the weight of memory settling over him. This ending sequence illustrates the film insistence that survival is not just a physical act but also a burden carried into old age. Unlike younger Markova, who fought through circumstances with defiant spirit, the older Markova embodies the lingering cost of trauma: the invisible wounds that remain long after the war ends.
+
+The story of Markova life the mid film scene depicts the breaking and reshaping of his spirit, while the ending captures the long-term impact of living through violence and discrimination. The contrast between the two moments one chaotic and coercive, the other still and reflective reveals the film understanding of what it means to endure. Portes direction elevates the narrative by allowing Markova humanity to guide the story, rather than reducing him to a mere symbol of historical suffering.">
+    <div class="slot-inner"><div class="slot-front">Chito V. Castro</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+  <div class="slot" data-title="Slot 2" data-stars="4" data-clip="clip2.mp4" data-review="Review for Slot 2: Interesting themes and visuals that capture attention.">
+    <div class="slot-inner"><div class="slot-front">Slot 2</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+  <div class="slot" data-title="Slot 3" data-stars="3.5" data-clip="clip3.mp4" data-review="Review for Slot 3: Provides a good balance of humor and drama.">
+    <div class="slot-inner"><div class="slot-front">Slot 3</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+  <div class="slot" data-title="Slot 4" data-stars="4.5" data-clip="clip4.mp4" data-review="Review for Slot 4: Visually striking scene with emotional depth.">
+    <div class="slot-inner"><div class="slot-front">Slot 4</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+</div>
+
+<div class="grid row-4">
+  <div class="slot" data-title="Slot 5" data-stars="4" data-clip="clip5.mp4" data-review="Review for Slot 5: Story develops with suspense and character growth.">
+    <div class="slot-inner"><div class="slot-front">Slot 5</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+  <div class="slot" data-title="Slot 6" data-stars="3" data-clip="clip6.mp4" data-review="Review for Slot 6: Some parts may feel slow, but message is clear.">
+    <div class="slot-inner"><div class="slot-front">Slot 6</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+  <div class="slot" data-title="Slot 7" data-stars="5" data-clip="clip7.mp4" data-review="Review for Slot 7: Excellent soundtrack and memorable visuals.">
+    <div class="slot-inner"><div class="slot-front">Slot 7</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+  <div class="slot" data-title="Slot 8" data-stars="2.5" data-clip="clip8.mp4" data-review="Review for Slot 8: Some scenes are weaker, but overall entertainment value remains.">
+    <div class="slot-inner"><div class="slot-front">Slot 8</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+</div>
+
+<div class="grid row-3">
+  <div class="slot" data-title="Slot 9" data-stars="4" data-clip="clip9.mp4" data-review="Review for Slot 9: Engaging plot with interesting character arcs.">
+    <div class="slot-inner"><div class="slot-front">Slot 9</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+  <div class="slot" data-title="Slot 10" data-stars="5" data-clip="clip10.mp4" data-review="Review for Slot 10: Outstanding performance by lead actors. Emotional and gripping.">
+    <div class="slot-inner"><div class="slot-front">Slot 10</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+  <div class="slot" data-title="Slot 11" data-stars="4.5" data-clip="clip11.mp4" data-review="Review for Slot 11: Beautifully shot scenes with excellent pacing and narrative.">
+    <div class="slot-inner"><div class="slot-front">Slot 11</div><div class="slot-back"><div class="star-rating"></div><p class="preview-text"></p></div></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2 id="modal-title">Title</h2>
+    <div id="modal-review"></div>
+  </div>
+</div>
+
+<div class="citation">
+</div>
+
+<script>
+// Fade-in on load
+window.addEventListener('load', () => document.body.classList.add('loaded'));
+
+// Smooth page navigation
+document.querySelectorAll('.nav-link').forEach(link=>{
+  link.addEventListener('click', e=>{
+    e.preventDefault();
+    const href = link.getAttribute('href');
+    document.body.classList.remove('loaded');
+    document.body.classList.add('fade-out');
+    setTimeout(()=>window.location.href = href, 600);
+  });
+});
+
+// Render stars
+function renderStars(container, rating) {
+  container.innerHTML = '';
+  const full = Math.floor(rating);
+  const half = (rating % 1) >= 0.5;
+  for(let i=0;i<full;i++){ const s=document.createElement('span'); s.className='star'; s.textContent='★'; container.appendChild(s);}
+  if(half){ const s=document.createElement('span'); s.className='star'; s.textContent='☆'; container.appendChild(s);}
+  for(let i=full+(half?1:0);i<5;i++){ const s=document.createElement('span'); s.className='star'; s.style.opacity='0.25'; s.textContent='★'; container.appendChild(s);}
+}
+
+// Slots and modal
+const slots = document.querySelectorAll('.slot');
+const modal = document.querySelector('.modal');
+const modalTitle = document.getElementById('modal-title');
+const modalReview = document.getElementById('modal-review');
+const modalClose = document.querySelector('.modal-close');
+
+slots.forEach(slot=>{
+  const duration = 3 + Math.random()*2;
+  const delay = Math.random()*2;
+  slot.style.animation = `floatGlow ${duration}s ease-in-out ${delay}s infinite`;
+
+  const starsEl = slot.querySelector('.star-rating');
+  renderStars(starsEl, parseFloat(slot.dataset.stars)||0);
+
+  const preview = slot.querySelector('.preview-text');
+  preview.textContent = slot.dataset.review.substring(0,150)+'...';
+
+  slot.addEventListener('click',()=>{
+    modal.classList.add('show');
+    modalTitle.textContent = slot.dataset.title;
+    modalReview.innerHTML = '';
+    const clipUrl = slot.dataset.clip;
+
+    if(clipUrl && clipUrl.includes('youtube.com')){
+      const iframe=document.createElement('iframe');
+      iframe.src=clipUrl; iframe.width='100%'; iframe.height='250';
+      iframe.frameBorder='0';
+      iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen=true;
+      modalReview.appendChild(iframe);
+    } else if(clipUrl && (clipUrl.endsWith('.mp4')||clipUrl.endsWith('.webm')||clipUrl.endsWith('.ogg'))){
+      const video=document.createElement('video'); video.src=clipUrl; video.controls=true; video.style.width='100%'; video.style.borderRadius='10px';
+      modalReview.appendChild(video);
+    } else if(clipUrl){
+      const img=document.createElement('img'); img.src=clipUrl; img.alt=slot.dataset.title+' Clip'; img.style.width='100%'; img.style.borderRadius='10px';
+      modalReview.appendChild(img);
+    }
+
+     const reviewText = document.createElement('p');
+    reviewText.textContent = slot.dataset.review;
+    reviewText.style.marginTop = '15px';
+    modalReview.appendChild(reviewText);
+  });
+});
+
+// Close modal
+modalClose.addEventListener('click', () => {
+    modal.classList.remove('show');
+
+    // STOP ALL VIDEOS IN THE MODAL
+    modal.querySelectorAll("video").forEach(v => {
+        v.pause();
+        v.currentTime = 0;
+    });
+});
+modal.addEventListener('click', e => { 
+    if(e.target === modal) {
+        modal.classList.remove('show');
+
+        // STOP VIDEOS
+        modal.querySelectorAll("video").forEach(v => {
+            v.pause();
+            v.currentTime = 0;
+        });
+    }
+});
+
+
+</script>
+
+</body>
+</html>
+
+
+</div>
+
+<!-- MEMBERS PAGE -->
+<div id="membersPage" class="page">
+  <!-- Your members page content here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Members — MARKOVA: COMFORT GAY</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Page fade-in/out */
+body {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  background:
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    url('https://m.media-amazon.com/images/M/MV5BODJhMjQyOTUtNWE0NS00YjM2LWEwMDEtN2ZkMjI1OTNmNGZmXkEyXkFqcGc@._V1_.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+body.loaded { opacity: 1; }
+.fade-out { opacity: 0 !important; }
+
+header { text-align: center; padding: 20px 20px; }
+header h1 { font-size:60px; color:#ff77aa; text-shadow:0 0 10px #ff0044; position: relative; margin-top:-60px; }
+
+nav { text-align:center; margin-bottom:0px; }
+nav a {
+  display:inline-block; margin:0 10px; padding:10px 20px;
+  background:#ff0044; color:white; text-decoration:none;
+  border-radius:10px; transition:0.3s;
+}
+nav a:hover { background:#ff77aa; color:black; }
+
+.grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:20px; width:90%; margin:0 auto 50px auto; }
+.member-card { background: rgba(20,0,0,0.7); padding:15px; border-radius:15px; text-align:center; box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa; }
+.member-card img { width:100%; border-radius:10px; margin-bottom:10px; }
+.member-card h3 { margin:5px 0; color:#ff77aa; }
+.member-card p { margin:3px 0; font-size:14px; color:#eee; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>The Golden Gays Members</h1>
+</header>
+
+
+<div class="grid">
+  <!-- Members 1-11 -->
+  <div class="member-card">
+    <img src="ches.jfif" alt="Member 1">
+    <h3>Member 1</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Writer</p>
+    <p><strong>Contribution:</strong> Wrote the introduction and synopsis for homepage.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member2.jpg" alt="Member 2">
+    <h3>Member 2</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Editor</p>
+    <p><strong>Contribution:</strong> Edited reviews and proofread pages.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member3.jpg" alt="Member 3">
+    <h3>Member 3</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Researcher</p>
+    <p><strong>Contribution:</strong> Collected references and verified data.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member4.jpg" alt="Member 4">
+    <h3>Member 4</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Designer</p>
+    <p><strong>Contribution:</strong> Designed website layout and graphics.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member5.jpg" alt="Member 5">
+    <h3>Member 5</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Developer</p>
+    <p><strong>Contribution:</strong> Implemented website functionality and scripts.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member6.jpg" alt="Member 6">
+    <h3>Member 6</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Writer</p>
+    <p><strong>Contribution:</strong> Wrote content for reviews and synopsis.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member7.jpg" alt="Member 7">
+    <h3>Member 7</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Editor</p>
+    <p><strong>Contribution:</strong> Proofread reviews and refined text content.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member8.jpg" alt="Member 8">
+    <h3>Member 8</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Designer</p>
+    <p><strong>Contribution:</strong> Created visuals for slides and banners.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member9.jpg" alt="Member 9">
+    <h3>Member 9</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Developer</p>
+    <p><strong>Contribution:</strong> Helped with interactive scripts and animations.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member10.jpg" alt="Member 10">
+    <h3>Member 10</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Researcher</p>
+    <p><strong>Contribution:</strong> Gathered references and historical context.</p>
+  </div>
+  <div class="member-card">
+    <img src="images/member11.jpg" alt="Member 11">
+    <h3>Member 11</h3>
+    <p><strong>Course/Section:</strong> BSIT 1-A</p>
+    <p><strong>Role:</strong> Coordinator</p>
+    <p><strong>Contribution:</strong> Oversaw project workflow and ensured deadlines.</p>
+  </div>
+</div>
+
+<script>
+// Fade-in on load
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
+});
+
+// Smooth navigation
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const href = link.getAttribute('href');
+    document.body.classList.remove('loaded');
+    document.body.classList.add('fade-out');
+
+    setTimeout(() => {
+      window.location.href = href;
+    }, 600);
+  });
+});
+</script>
+
+</body>
+</html>
+
+
+</div>
+
+<!-- REFERENCES PAGE -->
+<div id="referencesPage" class="page">
+  <!-- Your references page content here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>References — MARKOVA: COMFORT GAY</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Page fade-in/out */
+body {
+  margin:0;
+  font-family: 'Playfair Display', serif;
+  background:
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    url('https://m.media-amazon.com/images/M/MV5BODJhMjQyOTUtNWE0NS00YjM2LWEwMDEtN2ZkMjI1OTNmNGZmXkEyXkFqcGc@._V1_.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color:white;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+body.loaded { opacity: 1; }
+.fade-out { opacity: 0 !important; }
+
+header { text-align:center; padding:50px 20px; }
+header h1 { font-size:60px; color:#ff77aa; text-shadow:0 0 10px #ff0044; margin:0; }
+
+nav { text-align:center; margin-bottom:30px; }
+nav a {
+  display:inline-block; margin:0 10px; padding:10px 20px;
+  background:#ff0044; color:white; text-decoration:none;
+  border-radius:10px; transition:0.3s;
+}
+nav a:hover { background:#ff77aa; color:black; }
+
+.reference-block {
+  background: rgba(20,0,0,0.7);
+  padding:15px; margin:20px auto; border-radius:15px;
+  width:90%; max-width:900px;
+  box-shadow: 0 0 20px #ff0044, 0 0 40px #ff77aa;
+}
+.reference-block h3 { margin:5px 0; color:#ff77aa; }
+.reference-block ol { padding-left:20px; }
+.reference-block li { margin:5px 0; font-size:14px; color:#eee; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>References</h1>
+</header>
+
+<!-- References for 11 members -->
+<div class="reference-block">
+  <h3>Chito V. Castro</h3>
+  <ol>
+    <li>NO CITATIONS.</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 2</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 3</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 4</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 5</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 6</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 7</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 8</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 9</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 10</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<div class="reference-block">
+  <h3>Member 11</h3>
+  <ol>
+    <li>Author A. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author B. (Year). Title. <em>Publisher</em>. URL</li>
+    <li>Author C. (Year). Title. <em>Publisher</em>. URL</li>
+  </ol>
+</div>
+
+<script>
+// Fade-in on load
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
+});
+
+// Smooth navigation
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const href = link.getAttribute('href');
+    document.body.classList.remove('loaded');
+    document.body.classList.add('fade-out');
+
+    setTimeout(() => {
+      window.location.href = href;
+    }, 600);
+  });
+});
+</script>
+
+</body>
+</html>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2 id="modal-title">Title</h2>
+    <div id="modal-review"></div>
+  </div>
+</div>
+
+<div class="citation">
+  Inspired by the film “Markova: Comfort Gay” (2000). Reference: Philippine Film Archives.
+</div>
+
+<script>
+// Fade-in on load
+window.addEventListener('load', () => document.body.classList.add('loaded'));
+
+// Page navigation
+const navLinks = document.querySelectorAll('.nav-link');
+const pages = document.querySelectorAll('.page');
+
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+// STOP ALL VIDEOS ANYWHERE ON THE WEBSITE
+document.querySelectorAll("video").forEach(v => {
+    v.pause();
+    v.currentTime = 0;
+});
+    const target = link.dataset.target;
+    pages.forEach(p => { p.classList.remove('active'); });
+    document.body.classList.remove('loaded');
+    document.body.classList.add('fade-out');
+    setTimeout(() => {
+      document.getElementById(target).classList.add('active');
+      document.body.classList.remove('fade-out');
+      document.body.classList.add('loaded');
+    }, 600);
+  });
+});
+</script>
+</body>
+</html>
